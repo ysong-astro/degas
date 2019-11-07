@@ -21,13 +21,14 @@ def cubemask(filename,low_cut,peak_cut):
     bmin=cubehead['BMIN'] # degree
     pxscale=np.abs(cubehead['CDELT1']) # degree per pixel
     beampx=(np.pi*bmaj*bmin/(4*np.log(2)))/pxscale**2 #gaussian beamsize in pixels
-    madstd=mad_std(cube,ignore_nan=True) #rms estimated from MAD
     
     #get combined mask from all parent structures
     mask = np.zeros(cube.shape, dtype=bool)
     for i in range(nchan):
         #for each channel map
         slice=cube[i,:,:]
+        #rms estimated from MAD
+        madstd=mad_std(slice,ignore_nan=True)
         #compute dendrogram with a min threshold (input), 1sigma contrast, 1 beamsize as lower limit and a peak value lower limit(input)
         #all distinct regions will need to have a peak value > 5sigma, or else it will be merged
         d=Dendrogram.compute(slice,min_value=low_cut*madstd,min_delta=1*madstd,min_npix=beampx,is_independent=p.min_peak(peak_cut*madstd))
