@@ -11,6 +11,11 @@ def cubemask(filename,low_cut,peak_cut):
     #import datacube and info
     cube=fits.getdata(filename)
     cubehead=fits.getheader(filename)
+    survey=filename.split('_')[1]
+    if survey=='bima':
+        cube=cube[0,:,:,:] #bima cubes have 4 axess
+    else:
+        cube=cube #heracles cubes have 3 axes
     nchan=cubehead['NAXIS3'] #number of channels
     bmaj=cubehead['BMAJ'] # degree
     bmin=cubehead['BMIN'] # degree
