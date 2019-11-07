@@ -4,6 +4,7 @@ from astrodendro import Dendrogram
 from astrodendro import pruning as p
 from matplotlib import pyplot as plt
 from astropy.stats import mad_std
+from scipy import ndimage
 
 
 def cubemask(filename,low_cut,peak_cut):
