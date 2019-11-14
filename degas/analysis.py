@@ -13,7 +13,12 @@ def cubemask(filename,low_cut,peak_cut):
     cubehead=fits.getheader(filename)
     survey=filename.split('_')[1]
     if survey=='bima':
-        cube=cube[0,:,:,:] #bima cubes have 4 axess
+        oldfile=filename.replace('_gauss15.fits','_k.fits')
+        #get the non-smoothed data, bima cubes have 4 axess
+        oldcube=fits.getdata(oldfile)[0,:,:,:]
+        oldmask=oldcube==0.0 #extract the original '0'valued pb mask
+        cube=cube[0,:,:,:]#get the smoothed data
+        cube[oldmask]=np.nan #where the '0' mask was, mask as nan
     else:
         cube=cube #heracles cubes have 3 axes
     nchan=cubehead['NAXIS3'] #number of channels
